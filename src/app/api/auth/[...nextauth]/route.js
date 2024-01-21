@@ -1,26 +1,32 @@
 import NextAuth from "next-auth";
-import GithubProvider from "next-auth/providers/github";
 import GoogleProvider from "next-auth/providers/google";
 import CredentialsProvider from "next-auth/providers/credentials";
-import User from "@/models/User";
-import connect from "@/utils/db";
 import bcrypt from "bcryptjs";
+import connect from "@/utils/db";
+import User  from "@/models/User"; // Import your User model correctly
 
 const handler = NextAuth({
   providers: [
+    //Add credential provider here
     CredentialsProvider({
-      id: "credentials",
+      // The name to display on the sign in form (e.g. "Sign in with...")
       name: "Credentials",
-      async authorize(credentials) {
-        //Check if the user exists.
+      // `credentials` is used to generate a form on the sign in page.
+      // You can specify which fields should be submitted, by adding keys to the `credentials` object.
+      // e.g. domain, username, password, 2FA token, etc.
+      // You can pass any HTML attribute to the <input> tag through the object.
+      credentials: {
+        email: { label: "email", type: "text", placeholder: "harsh" },
+        password: { label: "Password", type: "password" }
+      },
+      async authorize(credentials, req) {
+        // Add logic here to look up the user from the credentials supplied
         await connect();
-
         try {
           const user = await User.findOne({
-            email: credentials.email,
+            email: credentials?.email,
           });
-
-          if (user) {
+          if (user && credentials) {
             const isPasswordCorrect = await bcrypt.compare(
               credentials.password,
               user.password
@@ -35,23 +41,19 @@ const handler = NextAuth({
             throw new Error("User not found!");
           }
         } catch (err) {
-          throw new Error(err);
+          throw new Error("err");
         }
       },
     }),
-    GithubProvider({
-      clientId: process.env.GITHUB_ID,
-      clientSecret: process.env.GITHUB_SECRET,
-    }),
+  
     GoogleProvider({
-      clientId: process.env.GOOGLE_CLIENT_ID,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+      clientId: process.env.GOOGLE_CLIENT_ID || "",
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET || "",
     }),
   ],
-  pages: {
-    error: "/dashboard/login",
-  },
-
+  pages:{
+    error:'/login'
+  }
 });
 
 export { handler as GET, handler as POST };

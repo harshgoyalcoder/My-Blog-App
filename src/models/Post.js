@@ -2,6 +2,12 @@ import mongoose from "mongoose";
 
 const { Schema } = mongoose;
 
+const commentSchema = new Schema({
+  text: {
+    type: String,
+    required: true,
+  },
+});
 const postSchema = new Schema(
   {
     title: {
@@ -14,7 +20,7 @@ const postSchema = new Schema(
     },
     img: {
       type: String,
-      required: true,
+      // required: true,
     },
     content: {
       type: String,
@@ -24,9 +30,15 @@ const postSchema = new Schema(
       type: String,
       required: true,
     },
+    likes: {
+      type: Number,
+      default: 0,
+    },
+    comments: [commentSchema],
   },
   { timestamps: true }
 );
+
 
 //If the Post collection does not exist create a new one.
 export default mongoose.models.Post || mongoose.model("Post", postSchema);

@@ -6,13 +6,13 @@
 }
 
 .title{
-  color: #bbb;
+  color: #908484;
 }
 
 .subtitle{
   font-size: 20px;
   margin-bottom: 30px;
-  color: #bbb;
+  color: #999999;
 }
 
 .form {
@@ -28,7 +28,7 @@
   border: 2px solid #bbb;
   border-radius: 5px;
   outline: none;
-  color: #bbb;
+  color: #535353;
   font-size: 20px;
   font-weight: bold;
 }

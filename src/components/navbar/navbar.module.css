@@ -7,11 +7,12 @@
 
 .logo {
   font-weight: bold;
-  font-size: 22px;
+  font-size: 25px;
 }
 
 .links {
   display: flex;
+  font-size: 22px;
   align-items: center;
   gap: 20px;
 }
